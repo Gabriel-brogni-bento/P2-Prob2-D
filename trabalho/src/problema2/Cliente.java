@@ -16,6 +16,7 @@ public abstract class Cliente {
     private String telCelular;
     private String telFixo;
     private HashMap<String,ContaCorrente> contas;
+    protected Notificador notificador;
 
     public Cliente(String nome, String telCelular, String telFixo) {
         this.setNome(nome);
@@ -59,6 +60,9 @@ public abstract class Cliente {
         this.telFixo = telFixo;
     }
     
+    public abstract void setTipoNotificacao(TipoNotificacao tipo);
     
-    
+    public void enviarNotificacao(String mensagem) {
+    	notificador.enviarNotificacoes(mensagem);
+    } 
 }

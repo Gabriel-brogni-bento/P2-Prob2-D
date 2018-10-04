@@ -34,6 +34,9 @@ public class ContaCorrente {
             throw new IllegalArgumentException("Saldo insuficiente para o saque");
         }
         Operacao oper = new Operacao(valor,this.getSaldo(),TipoOperacao.SAIDA,new Date(),this);
+        
+        cliente.notificador.enviarNotificacoes("Saque efetuado");
+        
         operacoes.add(oper);
         this.saldo -= valor;
     }
