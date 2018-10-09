@@ -8,16 +8,21 @@ package problema2;
 public class ClientePessoaJuridica extends Cliente{
     private String cnpj;
     private String servidorJMS;
-    private NotificadorPessoaJuridica notificador;
 
     public ClientePessoaJuridica(String nome, String telCelular, String telFixo, String cnpj, String servidorJMS) {
         super(nome, telCelular, telFixo);
         this.setCnpj(cnpj);
         this.setServidorJMS(servidorJMS);
-        this.notificador = new NotificadorPessoaJuridica();
     } 
     
+    @Override
     public void setTipoNotificacao(TipoNotificacao tipo) {
+    	
+    	NotificadorMensagemPessoaJuridica notificador = (NotificadorMensagemPessoaJuridica) servicos.getServico(TipoServico.Notificacao);
+		
+		if (notificador == null)
+			return;
+		
     	switch (tipo) {
 		case WhatsApp:
 			notificador.addNotificacao(new NotificacaoWhatsApp());
@@ -29,6 +34,20 @@ public class ClientePessoaJuridica extends Cliente{
 			notificador.addNotificacao(new NotificacaoJMS());
 			break;
 		}
+    }
+    
+    public void setTipoServico(TipoServico tipo) {
+    	switch (tipo) {
+    	case Notificacao:
+    		servicos.adicionarServico(new NotificadorMensagemPessoaJuridica());
+    		break;
+    	case AnaliseFluxoCaixa:
+    		servicos.adicionarServico(new AnaliseFluxoCaixa());
+    		break;
+    	case BaixaAutomatica:
+    		servicos.adicionarServico(new BaixaAutomaticaInvestimento());
+    		break;
+    	}
     }
     
     public String getCnpj() {

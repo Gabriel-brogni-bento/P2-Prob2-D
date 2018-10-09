@@ -4,7 +4,7 @@ public class NotificacaoJMS implements INotificacao {
 
 	@Override
 	public void enviarNotificacao(String mensagem) {
-		// logica de enviar por JMS
+		System.out.println("Mensagem por JMS: " + mensagem);
 	}
 
 }

@@ -16,13 +16,14 @@ public abstract class Cliente {
     private String telCelular;
     private String telFixo;
     private HashMap<String,ContaCorrente> contas;
-    protected Notificador notificador;
+    protected GerenciadorServicos servicos;
 
     public Cliente(String nome, String telCelular, String telFixo) {
         this.setNome(nome);
         this.setTelCelular(telCelular);
         this.setTelFixo(telFixo);
         this.contas = new HashMap();
+        this.servicos = new GerenciadorServicos();
     }
 
     public void addConta(ContaCorrente cc){
@@ -61,8 +62,6 @@ public abstract class Cliente {
     }
     
     public abstract void setTipoNotificacao(TipoNotificacao tipo);
-    
-    public void enviarNotificacao(String mensagem) {
-    	notificador.enviarNotificacoes(mensagem);
-    } 
+    public abstract void setTipoServico(TipoServico tipo);
+ 
 }

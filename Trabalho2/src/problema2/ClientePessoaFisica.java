@@ -12,7 +12,6 @@ public class ClientePessoaFisica extends Cliente{
     public ClientePessoaFisica(String nome, String telCelular, String telFixo, String cpf) {
         super(nome, telCelular, telFixo);
         this.setCpf(cpf);
-        this.notificador = new Notificador();
     }
 
     public String getCpf() {
@@ -23,7 +22,14 @@ public class ClientePessoaFisica extends Cliente{
         this.cpf = cpf;
     }
     
+    @Override
     public void setTipoNotificacao(TipoNotificacao tipo) {
+    	
+    	NotificadorMensagem notificador = (NotificadorMensagem) servicos.getServico(TipoServico.Notificacao);
+    			
+		if (notificador == null)
+			return;
+    	
     	switch (tipo) {
 		case WhatsApp:
 			notificador.addNotificacao(new NotificacaoWhatsApp());
@@ -33,4 +39,19 @@ public class ClientePessoaFisica extends Cliente{
 			break;
 		}
     }
+    
+    public void setTipoServico(TipoServico tipo) {
+    	switch (tipo) {
+    	case Notificacao:
+    		servicos.adicionarServico(new NotificadorMensagem());
+    		break;
+    	case AnaliseFluxoCaixa:
+    		servicos.adicionarServico(new AnaliseFluxoCaixa());
+    		break;
+    	case BaixaAutomatica:
+    		servicos.adicionarServico(new BaixaAutomaticaInvestimento());
+    		break;
+    	}
+    }
+
 }

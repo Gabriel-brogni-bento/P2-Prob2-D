@@ -4,8 +4,7 @@ public class NotificacaoSMS implements INotificacao {
 
 	@Override
 	public void enviarNotificacao(String mensagem) {
-		// implementacao SMS
-		
+		System.out.println("Mensagem por SMS: " + mensagem);
 	}
 
 }

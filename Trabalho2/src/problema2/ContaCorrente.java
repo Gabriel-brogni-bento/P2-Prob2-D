@@ -34,17 +34,25 @@ public class ContaCorrente {
             throw new IllegalArgumentException("Saldo insuficiente para o saque");
         }
         Operacao oper = new Operacao(valor,this.getSaldo(),TipoOperacao.SAIDA,new Date(),this);
-        
-        cliente.notificador.enviarNotificacoes("Saque efetuado");
-        
+          
         operacoes.add(oper);
         this.saldo -= valor;
+       
+        cliente.servicos.setMensagem("Saque de " + valor + " reais efetuado");
+        cliente.servicos.setListaOperacoesBaixaAutomatica(operacoes);
+        cliente.servicos.setListaOperacoesAnaliseFluxo(operacoes);
+        executarServicos();
     }
     
     public void depositar(double valor){
         Operacao oper = new Operacao(valor,this.getSaldo(),TipoOperacao.ENTRADA,new Date(),this);
         operacoes.add(oper);
         this.saldo += valor;
+        
+        cliente.servicos.setMensagem("Depósito de " + valor + " reais efetuado");
+        cliente.servicos.setListaOperacoesBaixaAutomatica(operacoes);
+        cliente.servicos.setListaOperacoesAnaliseFluxo(operacoes);
+        executarServicos();
     }    
     
     public void transferir(double valor, ContaCorrente destino){
@@ -55,12 +63,22 @@ public class ContaCorrente {
         Operacao oper = new OperacaoTransferencia(valor,this.getSaldo(),TipoOperacao.SAIDA,new Date(),this,destino);
         operacoes.add(oper);
         this.saldo -= valor;
+        
+        cliente.servicos.setMensagem("Transferencia de " + valor + "  reais para " + destino.cliente.getNome());
+        cliente.servicos.setListaOperacoesBaixaAutomatica(operacoes);
+        cliente.servicos.setListaOperacoesAnaliseFluxo(operacoes);
+        executarServicos();
     }   
     
     private void receberTransferencia(double valor, ContaCorrente origem){    
         Operacao oper = new OperacaoTransferencia(valor,this.getSaldo(),TipoOperacao.ENTRADA,new Date(),this,origem);
         operacoes.add(oper);
-        this.saldo += valor;        
+        this.saldo += valor;   
+        
+        cliente.servicos.setMensagem("Transferencia de " + valor + " reais de " + origem.cliente.getNome());
+        cliente.servicos.setListaOperacoesBaixaAutomatica(operacoes);
+        cliente.servicos.setListaOperacoesAnaliseFluxo(operacoes);
+        executarServicos();
     }
     
     public int getNumero() {
@@ -94,5 +112,9 @@ public class ContaCorrente {
     @Override
     public String toString(){
         return this.getChave();
+    }
+    
+    private void executarServicos() {
+    	cliente.servicos.executarServicos();    	
     }
 }
