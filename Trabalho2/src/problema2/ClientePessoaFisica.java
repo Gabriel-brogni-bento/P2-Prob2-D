@@ -1,12 +1,14 @@
 package problema2;
 
-
+import enums.TipoNotificacao;
+import factories.FactoryNotificacoes;
+import interfaces.INotificacao;
 
 /**
  *
  * @author marcel
  */
-public class ClientePessoaFisica extends Cliente{
+public class ClientePessoaFisica extends Cliente {
     private String cpf;
 
     public ClientePessoaFisica(String nome, String telCelular, String telFixo, String cpf) {
@@ -21,37 +23,9 @@ public class ClientePessoaFisica extends Cliente{
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
-    
-    @Override
-    public void setTipoNotificacao(TipoNotificacao tipo) {
-    	
-    	NotificadorMensagem notificador = (NotificadorMensagem) servicos.getServico(TipoServico.Notificacao);
-    			
-		if (notificador == null)
-			return;
-    	
-    	switch (tipo) {
-		case WhatsApp:
-			notificador.addNotificacao(new NotificacaoWhatsApp());
-			break;
-		case SMS: 
-			notificador.addNotificacao(new NotificacaoSMS());
-			break;
-		}
-    }
-    
-    public void setTipoServico(TipoServico tipo) {
-    	switch (tipo) {
-    	case Notificacao:
-    		servicos.adicionarServico(new NotificadorMensagem());
-    		break;
-    	case AnaliseFluxoCaixa:
-    		servicos.adicionarServico(new AnaliseFluxoCaixa());
-    		break;
-    	case BaixaAutomatica:
-    		servicos.adicionarServico(new BaixaAutomaticaInvestimento());
-    		break;
-    	}
-    }
 
+	@Override
+	public INotificacao getObjNotificacao(TipoNotificacao tipo) {
+		return FactoryNotificacoes.criaNotificacaoPF(tipo);
+	}
 }

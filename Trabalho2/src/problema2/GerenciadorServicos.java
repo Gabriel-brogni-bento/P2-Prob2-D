@@ -1,66 +1,49 @@
 package problema2;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import enums.TipoOperacao;
+import enums.TipoServico;
+import interfaces.IServico;
+import servicos.ServicoNotificadorMensagem;
+
 
 public class GerenciadorServicos {
-	protected ArrayList<IServico> servicos;
+	private HashMap<TipoServico, IServico> servicos = new HashMap<TipoServico, IServico>();
+	private Cliente cliente;
 	
-	public GerenciadorServicos() {
-		servicos = new ArrayList<IServico>();
+	public GerenciadorServicos(Cliente cliente) {
+		this.cliente = cliente;
 	}
 	
-	public void executarServicos() {
-		for (int i = 0; i < servicos.size(); ++i) {
-			servicos.get(i).executarServico();
+	public void executarServicos(ContaCorrente conta, TipoOperacao tipo) {
+		
+		for (Map.Entry<TipoServico, IServico> servicoAtual : servicos.entrySet()) {
+			
+			if (servicoAtual.getValue().podeExecutar(tipo)) {
+				String infoCliente = ("Cliente " +  cliente.getNome() + " conta " + conta.getNumero() + "-" + conta.getAgencia() + " - ");
+				servicoAtual.getValue().executarServico(infoCliente, tipo);
+			}	
 		}
 	}
 	
 	public IServico getServico(TipoServico tipo) {
-		for (int i = 0; i < servicos.size(); ++i) {
-			IServico servicoAtual = servicos.get(i);
-						
-			switch(tipo) {
-				case Notificacao:
-					if (servicoAtual instanceof NotificadorMensagem)
-						return servicoAtual;
-					break;
-				case BaixaAutomatica:
-					if (servicoAtual instanceof BaixaAutomaticaInvestimento)
-						return servicoAtual;
-					break;
-				case AnaliseFluxoCaixa:
-					if (servicoAtual instanceof AnaliseFluxoCaixa)
-						return servicoAtual;
-					break;
-			}
-		}
-		
-		return null;
+		return servicos.get(tipo);
 	}
 	
-	public void adicionarServico(IServico servico) {
-		servicos.add(servico);
+	public void addServico(TipoServico tipo, IServico servico) {
+		servicos.put(tipo, servico);
+	}
+	
+	public void removeServico(TipoServico tipo) {
+		servicos.remove(tipo);
 	}
 	
 	public void setMensagem(String msg) {
-		NotificadorMensagem notificador = (NotificadorMensagem) getServico(TipoServico.Notificacao);
+		ServicoNotificadorMensagem notificador = (ServicoNotificadorMensagem) getServico(TipoServico.Notificacao);
 		
 		if (notificador != null)
 			notificador.setMensagem(msg);
-	}
-	
-	public void setListaOperacoesAnaliseFluxo(List<Operacao> op) {
-		AnaliseFluxoCaixa notificador = (AnaliseFluxoCaixa) getServico(TipoServico.AnaliseFluxoCaixa);
-		
-		if (notificador != null)
-			notificador.setListaOperacoes(op);
-	}
-	
-	public void setListaOperacoesBaixaAutomatica(List<Operacao> op) {
-		BaixaAutomaticaInvestimento notificador = (BaixaAutomaticaInvestimento) getServico(TipoServico.BaixaAutomatica);
-		
-		if (notificador != null)
-			notificador.setListaOperacoes(op);
 	}
 }

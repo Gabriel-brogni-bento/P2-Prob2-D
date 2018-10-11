@@ -5,6 +5,8 @@ import problema2.ContaCorrente;
 import java.text.DateFormat;
 import java.util.Date;
 
+import enums.TipoOperacao;
+
 
 /**
  *

@@ -1,5 +1,8 @@
 package problema2;
 
+import enums.TipoNotificacao;
+import factories.FactoryNotificacoes;
+import interfaces.INotificacao;
 
 /**
  *
@@ -15,42 +18,7 @@ public class ClientePessoaJuridica extends Cliente{
         this.setServidorJMS(servidorJMS);
     } 
     
-    @Override
-    public void setTipoNotificacao(TipoNotificacao tipo) {
-    	
-    	NotificadorMensagemPessoaJuridica notificador = (NotificadorMensagemPessoaJuridica) servicos.getServico(TipoServico.Notificacao);
-		
-		if (notificador == null)
-			return;
-		
-    	switch (tipo) {
-		case WhatsApp:
-			notificador.addNotificacao(new NotificacaoWhatsApp());
-			break;
-		case SMS: 
-			notificador.addNotificacao(new NotificacaoSMS());
-			break;
-		case JMS:
-			notificador.addNotificacao(new NotificacaoJMS());
-			break;
-		}
-    }
-    
-    public void setTipoServico(TipoServico tipo) {
-    	switch (tipo) {
-    	case Notificacao:
-    		servicos.adicionarServico(new NotificadorMensagemPessoaJuridica());
-    		break;
-    	case AnaliseFluxoCaixa:
-    		servicos.adicionarServico(new AnaliseFluxoCaixa());
-    		break;
-    	case BaixaAutomatica:
-    		servicos.adicionarServico(new BaixaAutomaticaInvestimento());
-    		break;
-    	}
-    }
-    
-    public String getCnpj() {
+   public String getCnpj() {
         return cnpj;
     }
 
@@ -66,4 +34,8 @@ public class ClientePessoaJuridica extends Cliente{
         this.servidorJMS = servidorJMS;
     }
     
+	@Override
+	public INotificacao getObjNotificacao(TipoNotificacao tipo) {
+		return FactoryNotificacoes.criaNotificacaoPJ(tipo);
+	}
 }

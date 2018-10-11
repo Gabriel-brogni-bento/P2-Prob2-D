@@ -1,0 +1,19 @@
+Observer:
+Classes dentro do pacote servicos e notificacoes
+
+GerenciadorServicos (Observer)
+Observables:
+ServicoAnaliseFluxoCaixa
+ServicoAnaliseIvestimento
+ServicoBaixaAutomaticaInvestimento
+ServicoNotificadorMensagem
+ServicoOfertaFinanciamento
+
+ServicoNotificacaoMensagem(Observer)
+Observables:
+NoficacaoSMS
+NoficacaoWhatsApp
+NoficacaoJMS
+
+Factory:
+Classes dentro do pacote factories
