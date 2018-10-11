@@ -11,18 +11,18 @@ import servicos.ServicoNotificadorMensagem;
 
 public class GerenciadorServicos {
 	private HashMap<TipoServico, IServico> servicos = new HashMap<TipoServico, IServico>();
-	private Cliente cliente;
+	private ContaCorrente conta;
 	
-	public GerenciadorServicos(Cliente cliente) {
-		this.cliente = cliente;
+	public GerenciadorServicos(ContaCorrente conta) {
+		this.conta = conta;
 	}
 	
-	public void executarServicos(ContaCorrente conta, TipoOperacao tipo) {
+	public void executarServicos(TipoOperacao tipo) {
 		
 		for (Map.Entry<TipoServico, IServico> servicoAtual : servicos.entrySet()) {
 			
 			if (servicoAtual.getValue().podeExecutar(tipo)) {
-				String infoCliente = ("Cliente " +  cliente.getNome() + " conta " + conta.getNumero() + "-" + conta.getAgencia() + " - ");
+				String infoCliente = ("Cliente " +  conta.getCliente().getNome() + " conta " + conta.getNumero() + "-" + conta.getAgencia() + " - ");
 				servicoAtual.getValue().executarServico(infoCliente, tipo);
 			}	
 		}

@@ -6,6 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import enums.*;
+import factories.FactoryServicos;
+import interfaces.INotificacao;
+import interfaces.IServico;
+import servicos.ServicoNotificadorMensagem;
 
 
 /*
@@ -22,10 +26,13 @@ public class ContaCorrente {
     private Cliente cliente;
     private double saldo = 0;
     private List<Operacao> operacoes = new ArrayList<Operacao>();
+    protected GerenciadorServicos servicos;
 
     public ContaCorrente(int numero, int agencia) {
         this.setNumero(numero);
         this.setAgencia(agencia);
+
+        this.servicos = new GerenciadorServicos(this);
     }
 
     public String getChave(){
@@ -41,8 +48,8 @@ public class ContaCorrente {
         operacoes.add(oper);
         this.saldo -= valor;
        
-        cliente.servicos.setMensagem("Saque de " + valor + " reais efetuado");
-        executarServicos(this, TipoOperacao.SAIDA);
+        servicos.setMensagem("Saque de " + valor + " reais efetuado");
+        executarServicos(TipoOperacao.SAIDA);
     }
     
     public void depositar(double valor){
@@ -50,8 +57,8 @@ public class ContaCorrente {
         operacoes.add(oper);
         this.saldo += valor;
         
-        cliente.servicos.setMensagem("Depósito de " + valor + " reais efetuado");
-        executarServicos(this, TipoOperacao.ENTRADA);
+        servicos.setMensagem("Depósito de " + valor + " reais efetuado");
+        executarServicos(TipoOperacao.ENTRADA);
     }    
     
     public void transferir(double valor, ContaCorrente destino){
@@ -63,8 +70,8 @@ public class ContaCorrente {
         operacoes.add(oper);
         this.saldo -= valor;
         
-        cliente.servicos.setMensagem("Transferencia de " + valor + "  reais para " + destino.cliente.getNome());
-        executarServicos(this, TipoOperacao.SAIDA);
+        servicos.setMensagem("Transferencia de " + valor + "  reais para " + destino.cliente.getNome());
+        executarServicos(TipoOperacao.SAIDA);
     }   
     
     private void receberTransferencia(double valor, ContaCorrente origem){    
@@ -72,8 +79,8 @@ public class ContaCorrente {
         operacoes.add(oper);
         this.saldo += valor;   
         
-        cliente.servicos.setMensagem("Transferencia de " + valor + " reais de " + origem.cliente.getNome());
-        executarServicos(this, TipoOperacao.ENTRADA);
+        servicos.setMensagem("Transferencia de " + valor + " reais de " + origem.cliente.getNome());
+        executarServicos(TipoOperacao.ENTRADA);
     }
     
     public int getNumero() {
@@ -109,7 +116,40 @@ public class ContaCorrente {
         return this.getChave();
     }
     
-    private void executarServicos(ContaCorrente conta, TipoOperacao tipo) {
-    	cliente.servicos.executarServicos(conta, tipo);    	
+    private void executarServicos(TipoOperacao tipo) {
+    	servicos.executarServicos(tipo);    	
+    }
+    
+    public void addNotificacao(TipoNotificacao tipo) {
+    	
+    	ServicoNotificadorMensagem notificador = (ServicoNotificadorMensagem) servicos.getServico(TipoServico.Notificacao);
+    			
+		if (notificador != null) {
+			
+			INotificacao objNotificacao = cliente.getObjNotificacao(tipo);
+		
+			if (objNotificacao != null) {
+				notificador.addNotificacao(tipo, objNotificacao);
+			}
+		}
+    }
+    
+    public void removeNotificacao(TipoNotificacao tipo) {
+    	ServicoNotificadorMensagem notificador = (ServicoNotificadorMensagem) servicos.getServico(TipoServico.Notificacao);
+    	
+    	if (notificador != null) {
+    		notificador.removeNotificacao(tipo);
+    	}
+    }
+    
+    public void addServico(TipoServico tipo) {
+    	IServico objServico = FactoryServicos.criaServico(tipo); 
+		
+		if (objServico != null)
+			servicos.addServico(tipo, objServico);
+    }
+    
+    public void removeServico(TipoServico tipo) {
+    	servicos.removeServico(tipo);
     }
 }

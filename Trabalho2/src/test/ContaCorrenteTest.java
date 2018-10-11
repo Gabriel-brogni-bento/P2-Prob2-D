@@ -18,20 +18,20 @@ public class ContaCorrenteTest {
 		
 		pessoaFisica.addConta(contaFisica);
 		
-		pessoaFisica.addServico(TipoServico.Notificacao);
-		pessoaFisica.addNotificacao(TipoNotificacao.WhatsApp);
-		pessoaFisica.addNotificacao(TipoNotificacao.SMS);
+		contaFisica.addServico(TipoServico.Notificacao);
+		contaFisica.addNotificacao(TipoNotificacao.WhatsApp);
+		contaFisica.addNotificacao(TipoNotificacao.SMS);
 		
-		pessoaFisica.addServico(TipoServico.AnaliseFluxoCaixa);
-		pessoaFisica.addServico(TipoServico.AnaliseInvestimento);
+		contaFisica.addServico(TipoServico.AnaliseFluxoCaixa);
+		contaFisica.addServico(TipoServico.AnaliseInvestimento);
 		
-		pessoaFisica.removeServico(TipoServico.AnaliseInvestimento);
+		contaFisica.removeServico(TipoServico.AnaliseInvestimento);
 		
 		contaFisica.depositar(100);
 		
 		contaFisica.sacar(10);
 		
-		pessoaFisica.removeNotificacao(TipoNotificacao.SMS);
+		contaFisica.removeNotificacao(TipoNotificacao.SMS);
 		contaFisica.sacar(10);
 		
 		/////////////
@@ -42,8 +42,8 @@ public class ContaCorrenteTest {
 		
 		pessoaJuridica.addConta(contaJuridica);
 		
-		pessoaJuridica.addServico(TipoServico.Notificacao);
-		pessoaJuridica.addNotificacao(TipoNotificacao.JMS);
+		contaJuridica.addServico(TipoServico.Notificacao);
+		contaJuridica.addNotificacao(TipoNotificacao.JMS);
 		
 		/////////////////////
 		
