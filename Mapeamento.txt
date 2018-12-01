@@ -17,3 +17,10 @@ NoficacaoJMS
 
 Factory:
 Classes dentro do pacote factories
+
++-*+-*+-*+-*+-*+-*+-*+-*
+Observações do Professor:
+- não implementou o padrão Observer, pois a ContaCorrente deveria ser observada (Subject) pelos serviços (Observers) que têm interesse nas suas mudanças de estado (operações realizadas).
+- a implementação realizada se aproxima de outro padrão: Mediator
+
+Nota (0-3): 2,0
